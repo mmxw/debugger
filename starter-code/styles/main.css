@@ -1,0 +1,92 @@
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  display: flex;
+  width: 440px;
+  height: 32px;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 2px 0px 10px 0px;
+}
+
+.form {
+  height: 4ch;
+  width: 4ch;
+ 
+}
+
+.flagCounter {
+  height: 4ch;
+  width: 4ch;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+.timer {
+  height: 4ch;
+  width: 4ch;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+.time-countdown {
+  padding: 3px 5px;
+}
+
+
+.flag {
+  height: 3ch;
+  width: 3ch;
+  
+}
+
+.flag-number {
+  padding: 3px 5px;
+}
+
+.clock {
+  height: 3ch;
+  width: 3ch;
+}
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  height: 480px;
+  width: 480px;
+  
+}
+
+
+.grid-item {
+  border: 2px dashed pink;
+  height: 40px;
+  width: 40px;
+
+}
+
+.bomb {
+
+}
