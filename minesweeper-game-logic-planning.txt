@@ -18,36 +18,58 @@
       - clear the board
       - generate the grid
       - display timer (starts counting down by each second)
-    
-       function play() {
-        clearGrid() 
-        generateGrid()
-      }
-      function generateGrid() {
-        Array(width * width).join('.').split('.').forEach(() => {
-          const square = document.createElement('div')
-          square.classList.add('grid-item')
-          squares.push(square)
-          board.appendChild(square)
-        })
-        //todo
-        timer()
-      }
 
-      function clearGrid() {
-        //todo
-      } 
-
-      function timeOut() {
-        if (timeRemaining === 0) {
-          // TODO game over
+     // when user hits the `play` button, the game board is set (by clearing and generating the grid)
+     //TODO add an html element for the `play` button
+        function play() {
+          clearGrid()
+          generateGrid()
         }
-      }
 
-      function timer() {
-        // count down by one second from 999
-        setTimeout(timeOut, 999000)
-      }
+        function generateGrid() {
+          Array(width * width).join('.').split('.').forEach(() => {
+            const square = document.createElement('div')
+            square.classList.add('grid-item')
+            squares.push(square)
+            board.appendChild(square)
+          })
+          timer()
+        }
+
+        // console.log(squares) //* TESTING
+        // generateGrid() //* TESTING
+
+
+        function countDown() {
+          if (timeRemaining === 990) {
+            finishGame()
+          } else {
+            timerDisplay.innerHTML = timeRemaining
+            timeRemaining--
+            console.log(timeRemaining)
+          }
+        }
+
+        // countDown() //* TESTING
+
+        function finishGame() {
+          // finish game; timer reset; 
+          gameInPlay = false
+          resetTimer()
+          alert('GAME OVER')
+        }
+
+        function timer() {
+          // count down by one second from 999
+          timerID = setInterval(countDown, 1000)
+          console.log('creating', timerID, new Error().stack) //* TESTING
+        }
+
+        function resetTimer() {
+          clearInterval(timerID)
+          console.log('clearing', timerID) //* TESTING
+          timerDisplay.textContent = 0
+        }
 
   2. first user click should open an empty one
     
@@ -63,16 +85,7 @@
     function userClick() {
       //TODO
     }
-    function countDown() {
-      if (timeRemaining === 0) {
-        finishGame()
-      } else {
-        timerDisplay.innerHTML = timeRemaining--
-      }
-    }
-    function timer() {
-      setTimeout(countDown, 999000)
-    }
+    
 
 
 	3. randomize the distribution of 10 bombs on the board, other than the spot open; give it a class '.bomb'
