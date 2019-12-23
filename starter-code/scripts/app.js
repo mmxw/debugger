@@ -11,15 +11,14 @@ function init() {
   let timeRemaining = 999
   let gameInPlay = false
   const userIndex = null
+  const randomBombIndex = null
   let excludedNumArr = [] //TODO CHANGE LATER
-  //TODO const excludedNumArr = flat(_.range(0, width, [width * line, width * (line + 1) - 1], _.range(width * 11, width * 12)))
-
-
+  
 
   //! DOM VARIABLES
   const board = document.querySelector('.board')
   const playBtn = document.querySelector('.play')
-  const firstClick = document.querySelector('.first-click') // first click triggers the revealing of nearby 5-20 grids 
+  let firstClick = document.querySelector('#first-click') // first click triggers the revealing of nearby non-bomb grids
   const timerDisplay = document.querySelector('.time-countdown')
   const flagDisplay = document.querySelectorAll('.flag')
   const bombCounterDisplay = document.querySelectorAll('.counter')
@@ -49,8 +48,8 @@ function init() {
     timer()
   }
 
-  // console.log(squares) //* TESTING
-  //generateGrid() //* TESTING
+  // console.log(squares) //* TESTING passed
+  //generateGrid() //* TESTING passed
 
 
   function countDown() {
@@ -63,7 +62,7 @@ function init() {
     }
   }
 
-  // countDown() //* TESTING
+  // countDown() //* TESTING passed
 
   function finishGame() {
     // finish game; timer reset; 
@@ -84,7 +83,7 @@ function init() {
     timerDisplay.textContent = 0
   }
 
-  generateGrid() //* TESTING
+  generateGrid() //* TESTING passed
 
   //*****************THE ABOVE IS ALL GOOD NOW; ADD STYLING LATER; ADD PLAY BUTTON LATER*/
 
@@ -94,11 +93,20 @@ function init() {
   function startGame() {
     // TODO the first one clicked on is always (0), 
     // TODO then computer automatically click all surrounding grids (because it is impossible for them to have bombs, otherwise the current one won't be 0
-    
-    randomizeBombs()
-    
+
+    squares.forEach(square => square.addEventListener('click', (e) => {
+      e.target.id = 'first-click'
+      firstClick = e.target
+      console.log(e) //* TESTING, passed
+      console.log('user has started the game by clicking on', squares.indexOf(firstClick)) //* TESTING, passed
+    }))
+
+    randomizeBombs() 
+    //console.log('created bombs at index', //generateRandomNums(0, 143)) //* TESTING, passed
 
   }
+
+  startGame()
 
   function randomizeBombs() {
     // any 12 grids on the board
@@ -107,23 +115,48 @@ function init() {
     const randomBombIndex = generateRandomNums(0, 143)
     randomBombIndex.forEach(index => squares[index].classList.add('bomb'))
   }
+
+
+ 
+
+  function excludedItems(width) {
+    const topRow = _.range(0, width)
+    const bottomRow = _.range(width * 11, width * 12)
+    let middleRows = []
+
+    for (let i = 1; i < 11; i++) {
+      middleRows.push([width * i, width * (i + 1) - 1])
+    } 
+
+    middleRows = middleRows.flat()
+    
+    excludedNumArr = [...topRow, ...bottomRow, ...middleRows]
+   
+    return excludedNumArr
+  }
+
   function generateRandomNums(min, max) {
 
     const randomNumbers = new Set()
-
+    
     while (randomNumbers.size < Math.sqrt(max + 1)) {
       // eslint-disable-next-line func-call-spacing
-      const randomNum = Math.floor(Math.random() * (max - min + 1)) + min
-      
-      randomNumbers.has(excludedNumArr) || randomNumbers.has(squares.indexOf(firstClick)) ? generateRandomNums(min, max) : randomNum
-      
-	    randomNumbers.add(randomNum)
-    }
+      const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
 
+      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
+        randomNumbers.add(randomNum)
+      }
+    
+    }
+    
+    console.log('bomb indexes', randomNumbers, new Error().stack)
     return randomNumbers
   }
 
-  // randomizeBombs() //* TESTING
+ 
+  //console.log(excludedItems(12)) //* TESTING, passed
+
+  // randomizeBombs() //* TESTING, passed
 
 
   function userClick(e) {
@@ -134,6 +167,7 @@ function init() {
     if (e.target.classList.constains('bomb')) {
       finishGame()
     } else {
+      //TODO game play
 
     }
     //TODO if the one clicked on is empty (0), computer automatically click all surrounding grids (because it is impossible for them to have bombs, otherwise the current one won't be 0
