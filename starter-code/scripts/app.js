@@ -3,8 +3,6 @@
 function init() {
 
   //! VARIABLES
-
-  // *const excludedNumsArr = flat(_.range(0, width, [width * line, width * (line + 1) - 1], _.range(width * 11, width * 12)))
   const squares = [] //arrays of grids
   const clickedGrid = null //index of the grid that user clicked
   const width = 12
@@ -13,6 +11,10 @@ function init() {
   let timeRemaining = 999
   let gameInPlay = false
   const userIndex = null
+  let excludedNumArr = [] //TODO CHANGE LATER
+  //TODO const excludedNumArr = flat(_.range(0, width, [width * line, width * (line + 1) - 1], _.range(width * 11, width * 12)))
+
+
 
   //! DOM VARIABLES
   const board = document.querySelector('.board')
@@ -99,12 +101,29 @@ function init() {
   }
 
   function randomizeBombs() {
-    //TODO any 10 grids on the board
+    // any 12 grids on the board
     //TODO other than the first one clicked (let clicked = the index of the clicked grid) 
 
     const randomBombIndex = generateRandomNums(0, 143)
     randomBombIndex.forEach(index => squares[index].classList.add('bomb'))
   }
+  function generateRandomNums(min, max) {
+
+    const randomNumbers = new Set()
+
+    while (randomNumbers.size < Math.sqrt(max + 1)) {
+      // eslint-disable-next-line func-call-spacing
+      const randomNum = Math.floor(Math.random() * (max - min + 1)) + min
+      
+      randomNumbers.has(excludedNumArr) || randomNumbers.has(squares.indexOf(firstClick)) ? generateRandomNums(min, max) : randomNum
+      
+	    randomNumbers.add(randomNum)
+    }
+
+    return randomNumbers
+  }
+
+  // randomizeBombs() //* TESTING
 
 
   function userClick(e) {
@@ -124,23 +143,6 @@ function init() {
 
   }
 
-  function generateRandomNums(min, max) {
-
-    const randomNumbers = new Set()
-
-    while (randomNumbers.size < Math.sqrt(max + 1)) {
-      // eslint-disable-next-line func-call-spacing
-      const randomNum = Math.floor(Math.random() * (max - min + 1)) + min
-      
-      randomNumbers.has(excludedNumArr) || randomNumbers.has(squares.indexOf(firstClick)) ? generateRandomNums(min, max) : randomNum
-      
-	    randomNumbers.add(randomNum)
-    }
-    
-    return randomNumbers
-  }
-
-  
 
   function countBombs() {	
     //TODO for each grid, count the neighboring 8 squares, if they have '.bomb' class, if so, counter ++
