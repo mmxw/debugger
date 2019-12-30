@@ -87,6 +87,18 @@ h1 {
 
 }
 
-.bomb {
-
+.empty-grid {
+  background-color: lightgray;
 }
+
+.nonempty-grid {
+  background-color: lightsteelblue;
+}
+
+.bomb {
+  background-color: greenyellow;
+}
+
+/* #first-click {
+  background-color: lightgray;
+} */

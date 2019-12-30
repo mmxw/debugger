@@ -76,6 +76,41 @@
     - then the program generates 10 random numbers between 0 and 143 (other than the clicked grid index); 
     - add '.bomb' class to these 10 grids; 
     - for each grid, look at the surrounding 8 grids, count the number of '.bomb' grids, display the number
+
+   
+  // no distinction between first click and other clicks; the only distinction is whether gameInPlay is true or not; [if use this approach go back and change the generateRandomNums(min, max) function ] 
+
+  function clicked(e) {
+    if (!gameInPlay) {
+      // reveal empty grid, i.e., there are 0 bombs in the  surrounding 8 grids 
+      bombCount === 0 // TODO
+      clickedGrid.innerHTML = ""
+      clickedGrid.addEventListener('click', (e) => {
+        e.target.classList.add('empty-grid')
+      }
+      gameInPlay === true
+      randomizeBombs() 
+      )
+    } else {
+      // TODO if the clicked grid is an empty grid, automatically click the surrounding 8 grids 
+      bombCount === 0
+      automaticClick() // TODO
+      // TODO for each of the 8 grids
+         // if (bombCount === 0)
+         clickedGrid.innerHTML = ""
+         e.target.classList.add('empty-grid')
+         automaticClick()
+         // if (bombCount > 0) 
+        clickedGrid.innerHTML = bombCount
+        e.target.classList.add('nonempty-grid')   
+    }
+    }
+  }
+
+
+
+
+
     
     // element: `firstClick`
 
@@ -83,11 +118,41 @@
 
     // execution: 
     
-    function startGame() {
+    function startGame(e) {
       //TODO
+      //first click 
+      
+     
+
+      randomizeBombs()
+
     }
     function userClick() {
       //TODO
+    }
+
+    function randomizeBombs() {
+
+      const randomBombIndex = generateRandomNums(0, 143)
+
+      randomBombIndex.forEach(index => squares[index].classList.add('bomb'))
+
+    }
+
+    function generateRandomNums(min, max) {
+
+      const randomNumbers = new Set()
+
+      while (randomNumbers.size < Math.sqrt(max + 1)) {
+      // eslint-disable-next-line func-call-spacing
+        const randomNum = Math.floor(Math.random() * (max - min + 1)) + min
+      
+        randomNumbers.has(excludedNumArr) || randomNumbers.has(squares.indexOf(firstClick)) ? generateRandomNums(min, max) : randomNum
+      
+	      randomNumbers.add(randomNum)
+      }
+
+      return randomNumbers
     }
     
   3. GAME IN PLAY: 

@@ -1,18 +1,17 @@
-/* eslint-disable no-unexpected-multiline */
-/* eslint-disable no-mixed-spaces-and-tabs */
+
 function init() {
 
   //! VARIABLES
   const squares = [] //arrays of grids
   const clickedGrid = null //index of the grid that user clicked
   const width = 12
+  let userIndex = null
+  let randomBombIndex = null
+  let bombCount = null
   let timerID = null
-  const bombCounter = null
   let timeRemaining = 999
   let gameInPlay = false
-  const userIndex = null
-  const randomBombIndex = null
-  let excludedNumArr = [] //TODO CHANGE LATER
+  let excludedNumArr = [] 
   
 
   //! DOM VARIABLES
@@ -89,24 +88,29 @@ function init() {
 
   //? USER STARTS GAME
 
-  
   function startGame() {
-    // TODO the first one clicked on is always (0), 
-    // TODO then computer automatically click all surrounding grids (because it is impossible for them to have bombs, otherwise the current one won't be 0
-
-    squares.forEach(square => square.addEventListener('click', (e) => {
-      e.target.id = 'first-click'
-      firstClick = e.target
-      console.log(e) //* TESTING, passed
-      console.log('user has started the game by clicking on', squares.indexOf(firstClick)) //* TESTING, passed
-    }))
-
-    randomizeBombs() 
-    //console.log('created bombs at index', //generateRandomNums(0, 143)) //* TESTING, passed
-
+    clearGrid()
+    clicked() 
   }
 
-  startGame()
+  // function startGame() {
+  //   // TODO the first one clicked on is always (0), 
+  //   // TODO then computer automatically click all surrounding grids (because it is impossible for them to have bombs, otherwise the current one won't be 0
+
+  //   squares.forEach(square => square.addEventListener('click', (e) => {
+  //     e.target.id = 'first-click'
+  //     firstClick = e.target
+  //     console.log(e) //* TESTING, passed
+  //     console.log('user has started the game by clicking on', squares.indexOf(firstClick)) //* TESTING, passed
+     
+  //   }))
+
+  //   randomizeBombs() 
+  //   //console.log('created bombs at index', //generateRandomNums(0, 143)) //* TESTING, passed
+
+  // }
+
+  // startGame()
 
   function randomizeBombs() {
     // any 12 grids on the board
@@ -115,9 +119,6 @@ function init() {
     const randomBombIndex = generateRandomNums(0, 143)
     randomBombIndex.forEach(index => squares[index].classList.add('bomb'))
   }
-
-
- 
 
   function excludedItems(width) {
     const topRow = _.range(0, width)
@@ -140,7 +141,7 @@ function init() {
     const randomNumbers = new Set()
     
     while (randomNumbers.size < Math.sqrt(max + 1)) {
-      // eslint-disable-next-line func-call-spacing
+
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
 
       if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
@@ -149,38 +150,44 @@ function init() {
     
     }
     
-    console.log('bomb indexes', randomNumbers, new Error().stack)
+    // console.log('bomb indexes', randomNumbers, new Error().stack) //* TESTING, passed
     return randomNumbers
   }
 
  
-  //console.log(excludedItems(12)) //* TESTING, passed
+  //console.log('these are the excluded grids', excludedItems(12)) //* TESTING, passed
 
   // randomizeBombs() //* TESTING, passed
 
 
-  function userClick(e) {
-    // continue playing if game continues; else game over
-    if (!gameInPlay) return 
-
-    // if the one clicked on is a bomb then game over
-    if (e.target.classList.constains('bomb')) {
-      finishGame()
+  function clicked() {
+    if (!gameInPlay) {
+      // reveal empty grid, i.e., there are 0 bombs in the  surrounding 8 grids 
+      bombCount === 0 // TODO
+      clickedGrid.innerHTML = ""
+      clickedGrid.addEventListener('click', (e) => {
+        e.target.classList.add('empty-grid')
+        gameInPlay === true
+        randomizeBombs() 
+      })
     } else {
-      //TODO game play
-
+      // TODO if the clicked grid is an empty grid, automatically click the surrounding 8 grids 
+      bombCount === 0 
+      automaticClick() // TODO
+      // TODO for each of the 8 grids
+         // if (bombCount === 0)
+         clickedGrid.innerHTML = ""
+         e.target.classList.add('empty-grid')
+         automaticClick()
+         // if (bombCount > 0) 
+        clickedGrid.innerHTML = bombCount
+        e.target.classList.add('nonempty-grid')   
+      }
     }
-    //TODO if the one clicked on is empty (0), computer automatically click all surrounding grids (because it is impossible for them to have bombs, otherwise the current one won't be 0
-    //TODO computer stops autoclicking when there forms a wall with numbers of bombs displayed in the grids 
-
-    
-
   }
-
 
   function countBombs() {	
     //TODO for each grid, count the neighboring 8 squares, if they have '.bomb' class, if so, counter ++
-
 
   }
 
@@ -188,8 +195,6 @@ function init() {
     //TODO right click to put a flag on the grid (if user decides that there is definitely a bomb, then they flag it)
 
   }
-
-  
 
   function clearGrid() {
     resetBoard()
@@ -203,9 +208,6 @@ function init() {
 
   }
 
-
-
-
   //TODO DOM EVENTS
 
   // SET UP GAME BOARD
@@ -218,16 +220,7 @@ function init() {
   // squares.forEach(square => {
   //   square.addEventListener('click', () => {
   //       console.log(squares.indexOf(square))
-  //   })
-  
-
-
-  
-
-
-
-
-  
+  //   }) 
   
 }
 
