@@ -1,33 +1,33 @@
 
 function init() {
 
-  //! VARIABLES
+  // VARIABLES
   const squares = [] //arrays of grids
-  const clickedGrid = null //index of the grid that user clicked
+  // const clickedGrid = null //index of the grid that user clicked
   const width = 12
   let userIndex = null
-  let randomBombIndex = null
-  let bombCount = null
+  let bombCount = 0 
   let timerID = null
   let timeRemaining = 999
   let gameInPlay = false
   let excludedNumArr = [] 
   
 
-  //! DOM VARIABLES
+  // DOM VARIABLES
   const board = document.querySelector('.board')
   const playBtn = document.querySelector('.play')
-  let firstClick = document.querySelector('#first-click') // first click triggers the revealing of nearby non-bomb grids
+  //const grids = document.querySelectorAll('.grid-item')
+  const clickedGrid = document.querySelector('.clicked-grid')
   const timerDisplay = document.querySelector('.time-countdown')
-  const flagDisplay = document.querySelectorAll('.flag')
+  const flagCount = document.querySelector('.flag-number')
   const bombCounterDisplay = document.querySelectorAll('.counter')
   const resetBtn = document.querySelector('.reset')
   
   
 
-  //! FUNCTIONS
+  // FUNCTIONS
 
-  //? SET UP GAME BOARD (MOSTLY DONE)
+  // SET UP GAME BOARD (MOSTLY DONE)
 
   // when user hits the `play` button, the game board is set (by clearing and generating the grid)
   //TODO add an html element for the `play` button
@@ -86,12 +86,79 @@ function init() {
 
   //*****************THE ABOVE IS ALL GOOD NOW; ADD STYLING LATER; ADD PLAY BUTTON LATER*/
 
-  //? USER STARTS GAME
+  // USER STARTS GAME
 
   function startGame() {
     clearGrid()
     clicked() 
   }
+
+  function clicked() {
+    if (!gameInPlay) {//? BEFORE GAME STARTED
+      // reveal empty grid, i.e., there are 0 bombs in the  surrounding 8 grids 
+      bombCount === 0 // TODO
+      clickedEmpty()
+      gameInPlay === true
+      randomizeBombs() 
+    } else { //? AFTER GAME STARTED
+      // if the clicked grid is an empty grid, automatically click the surrounding 8 grids
+      // for each of the 8 grids
+      if (bombCount === 0) {
+        clickedEmpty() 
+        automaticClick() 
+      } else if (bombCount > 0) {
+        clickedNonEmpty()
+      }  
+    }
+  }
+
+  startGame() //* TESTING 
+
+  function clickedEmpty() {
+    clickedGrid.addEventListener('click', e => {
+      e.target.classList.add('empty-grid')
+    })
+  } //!app.js:119 Uncaught TypeError: Cannot read property 'addEventListener' of null
+
+  function clickedNonEmpty() {
+    clickedGrid.innerHTML = bombCount
+    clickedGrid.addEventListener('click', e => {
+      e.target.classList.add('empty-grid')
+    })
+  }
+
+  //TODO how do i get the index of the clicked grid???
+  function automaticClick(index) {
+    // automatically click the surrounding 8 grids
+    const neighboringGrids = [squares[index - 13], squares[index - 12], squares[index - 11], squares[index - 1], squares[index + 1], squares[index + 11], squares[index + 12], squares[index + 13]]
+    for (const item of neighboringGrids) {
+      clicked()
+      countBombs(item)
+    }
+  }
+
+  function countBombs(index) {
+    const neighboringGrids = [squares[index - 13], squares[index - 12], squares[index - 11], squares[index - 1], squares[index + 1], squares[index + 11], squares[index + 12], squares[index + 13]]
+    for (const item of neighboringGrids) {
+      if (item.classList.contains('bomb')) {
+        bombCount++
+      }
+    }
+    return bombCount
+  }
+
+
+  function flag() {
+    //TODO right click to put a flag on the grid or to remove a flag  
+    if (clickedGrid.classList.contains('flagged-grid')) {
+      clickedGrid.classList.remove('flagged-grid')
+      flagCount.innerHTML++
+    } else {
+      clickedGrid.classList.add('flagged-grid')
+      flagCount.innerHTML--
+    }
+  }
+
 
   // function startGame() {
   //   // TODO the first one clicked on is always (0), 
@@ -128,11 +195,8 @@ function init() {
     for (let i = 1; i < 11; i++) {
       middleRows.push([width * i, width * (i + 1) - 1])
     } 
-
-    middleRows = middleRows.flat()
-    
+    middleRows = middleRows.flat()  
     excludedNumArr = [...topRow, ...bottomRow, ...middleRows]
-   
     return excludedNumArr
   }
 
@@ -144,11 +208,10 @@ function init() {
 
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
 
-      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
+      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(clickedGrid)))) {
         randomNumbers.add(randomNum)
       }
-    
-    }
+    } //TODO check `clicked-grid` (changed game logic)
     
     // console.log('bomb indexes', randomNumbers, new Error().stack) //* TESTING, passed
     return randomNumbers
@@ -160,41 +223,9 @@ function init() {
   // randomizeBombs() //* TESTING, passed
 
 
-  function clicked() {
-    if (!gameInPlay) {
-      // reveal empty grid, i.e., there are 0 bombs in the  surrounding 8 grids 
-      bombCount === 0 // TODO
-      clickedGrid.innerHTML = ""
-      clickedGrid.addEventListener('click', (e) => {
-        e.target.classList.add('empty-grid')
-        gameInPlay === true
-        randomizeBombs() 
-      })
-    } else {
-      // TODO if the clicked grid is an empty grid, automatically click the surrounding 8 grids 
-      bombCount === 0 
-      automaticClick() // TODO
-      // TODO for each of the 8 grids
-         // if (bombCount === 0)
-         clickedGrid.innerHTML = ""
-         e.target.classList.add('empty-grid')
-         automaticClick()
-         // if (bombCount > 0) 
-        clickedGrid.innerHTML = bombCount
-        e.target.classList.add('nonempty-grid')   
-      }
-    }
-  }
+  
+  
 
-  function countBombs() {	
-    //TODO for each grid, count the neighboring 8 squares, if they have '.bomb' class, if so, counter ++
-
-  }
-
-  function flag() {
-    //TODO right click to put a flag on the grid (if user decides that there is definitely a bomb, then they flag it)
-
-  }
 
   function clearGrid() {
     resetBoard()
@@ -222,6 +253,11 @@ function init() {
   //       console.log(squares.indexOf(square))
   //   }) 
   
+  // user places/removes flag by right clicking the grid
+
+  // clickedGrid.addEventListener('contextmenu', Flag)
+
+
 }
 
 
