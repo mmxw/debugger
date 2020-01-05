@@ -41,20 +41,48 @@ window.addEventListener('DOMContentLoaded', () => {
       square.classList.add('grid-item')
       square.addEventListener('click', () => {
         if (!gameInPlay) {
-          square.classList.add('first-click')
-          gameInPlay = true
-          randomizeBombs()
+          startGame(square)
         } else {
-          square.classList.add('clicked')
-          console.log(squares.indexOf(square), 'was clicked')
           clicked(square)
         }
       })
+      // square.addEventListener('contextmenu', placeFlag)
       squares.push(square)
       board.appendChild(square)
     })
     timer()
   } 
+
+  function startGame(square) {
+    // first click triggers random bomb-generating
+    square.classList.add('first-click')
+    gameInPlay = true
+    randomizeBombs()
+  }
+
+  function clicked(square) {
+    // game rules when square clicked (other than 1st click)
+    square.classList.add('clicked')
+    console.log(squares.indexOf(square), 'was clicked')
+    if (square.classList.contains('bomb')) {
+      //explode()
+      finishGame()
+    } 
+    //TODO 
+    // countBombs()
+    // placeFlags()
+  }
+
+
+  // function placeFlag(e, square) {
+  //   e.preventDefault()
+  //   square.classList.toggle('flagged-grid')
+  // }
+
+
+  
+
+
   
   function timer() {
     timerID = setInterval(countDown, 1000)
@@ -128,12 +156,9 @@ window.addEventListener('DOMContentLoaded', () => {
     return excludedNumArr
   }
 
-  function clicked(grid) {
-    if (grid.classList.contains('bomb')) {
-      //explode()
-      finishGame()
-    } 
-  }
+  
+
+  
 
 
 
