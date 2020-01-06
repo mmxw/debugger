@@ -72,6 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (square.classList.contains('bomb')) {
       //explode()
       finishGame()
+
     } else {
       
       currentIndex = getCurrentIndex(square)
@@ -85,13 +86,14 @@ window.addEventListener('DOMContentLoaded', () => {
         
       } else {
         square.classList.add('nonempty-grid')
+        square.innerHTML = bombCount
         //TODO clickedNonEmpty(index)
-
+        
       }
     }
     
     //TODO 
-    // countBombs()
+    
     // placeFlags()
   }
 
