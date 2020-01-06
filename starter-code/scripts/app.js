@@ -18,15 +18,10 @@ window.addEventListener('DOMContentLoaded', () => {
   let flagCount //TODO
   let currentIndex 
   
-  function init() {
-    generateGrid() //* TEST, passed
-    
-    
-    
-   
-  }
 
-  init()
+  generateGrid() 
+  excludedItems(width)
+  dummy(excludedNumArr)
   
   //FUNCTIONS
   
@@ -40,6 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
     Array(width * width).join('.').split('.').forEach(() => {
       const square = document.createElement('div')
       square.classList.add('grid-item')
+
       square.addEventListener('click', () => {
         if (!gameInPlay) {
           startGame(square)
@@ -49,16 +45,20 @@ window.addEventListener('DOMContentLoaded', () => {
       })
       //? square.addEventListener('contextmenu', placeFlag)
       squares.push(square)
+      
       board.appendChild(square)
     })
+    
     timer()
   } 
 
   function startGame(square) {
     // first click triggers random bomb-generating
+    
     square.classList.add('first-click')
     gameInPlay = true
     randomizeBombs()
+    
   }
 
   function clicked(square) {
@@ -124,9 +124,6 @@ window.addEventListener('DOMContentLoaded', () => {
   //   square.classList.toggle('flagged-grid')
   // }
 
-
-
-  
   function timer() {
     timerID = setInterval(countDown, 1000)
   }
@@ -194,21 +191,17 @@ window.addEventListener('DOMContentLoaded', () => {
     } 
     middleRows = middleRows.flat()  
     excludedNumArr = [...topRow, ...bottomRow, ...middleRows]
-
-    // console.log(excludedNumArr, 'outer grids')
+    
+    console.log(excludedNumArr, 'outer grids')
     return excludedNumArr
   }
 
-  
+  function dummy(excludedNumArr) {
+    
+    excludedNumArr.forEach(num => {
+      squares[num].classList.add('dummy')
+    })
+  }
 
   
-
-
-
-  
-
-
-
-
-
 })
