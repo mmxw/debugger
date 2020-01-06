@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const firstClick = document.querySelector('.first-click')
   const clickedGrids = document.querySelectorAll('.clicked') 
   
-  let bombCount //TODO
+  let bombCount 
   let flagCount //TODO
   let currentIndex 
   
@@ -43,6 +43,14 @@ window.addEventListener('DOMContentLoaded', () => {
           clicked(square)
         }
       })
+
+      square.addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+        rightClicked(square)
+      })
+      
+
+
       //? square.addEventListener('contextmenu', placeFlag)
       squares.push(square)
       
@@ -116,11 +124,27 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     return count
 
+  } 
+
+  function rightClicked(square) {
+    
+    // right click to place a flag
+    if (!square.classList.contains('flagged-grid')) {
+      square.classList.toggle('flagged-grid')
+      square.innerHTML = '&#x1F6A9;'
+      
+    } else {
+      square.classList.toggle('flagged-grid')
+      square.innerHTML = ''
+    }
+    
+    
+    
   }
 
-  function placeFlag() {
+  // function placeFlag() {
 
-  }
+  // }
   
 
   // function placeFlag(e, square) {
@@ -155,7 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function clearGrid() {
     squares.forEach(square => {
-      square.classList.removeClasses(['first-click', 'empty-grid', 'nonempty-grid', 'bomb'])
+      square.classList.removeClasses(['first-click', 'empty-grid', 'nonempty-grid', 'bomb', 'flagged-grid'])
       square.innerHTML = ''
 
     })
@@ -178,7 +202,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       randomBombIndex.forEach(index => {
         squares[index].classList.add('bomb')
-        console.log(index, 'bomb here')
+        //console.log(index, 'bomb here')
       })
 
     }
@@ -213,7 +237,7 @@ window.addEventListener('DOMContentLoaded', () => {
     middleRows = middleRows.flat()  
     excludedNumArr = [...topRow, ...bottomRow, ...middleRows]
     
-    console.log(excludedNumArr, 'outer grids')
+    //console.log(excludedNumArr, 'outer grids')
     return excludedNumArr
   }
 
