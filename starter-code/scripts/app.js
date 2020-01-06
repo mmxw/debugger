@@ -69,15 +69,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
     square.classList.add('clicked')
     console.log(squares.indexOf(square), 'was clicked')
+
+    currentIndex = getCurrentIndex(square)
+    bombCount = countBombs(currentIndex)
+
     if (square.classList.contains('bomb')) {
-      //explode()
+      //TODO explode()
       finishGame()
 
+    } else if (square.classList.contains('dummy')) {
+      square.innerHTML = ''
     } else {
-      
-      currentIndex = getCurrentIndex(square)
-      bombCount = countBombs(currentIndex)
-      console.log(bombCount)
+
+      //console.log(bombCount)
 
       if (bombCount === 0) {
         square.classList.add('empty-grid')
@@ -141,11 +145,28 @@ window.addEventListener('DOMContentLoaded', () => {
     gameInPlay = false
     resetTimer()
     alert('GAME OVER')
+    clearGrid()
   }
   
   function resetTimer() {
     clearInterval(timerID)
     timerDisplay.textContent = 999
+  }
+
+  function clearGrid() {
+    squares.forEach(square => {
+      square.classList.removeClasses(['first-click', 'empty-grid', 'nonempty-grid', 'bomb'])
+      square.innerHTML = ''
+
+    })
+      
+  }
+
+  DOMTokenList.prototype.removeClasses = function(classes) {
+    
+    for (let i = 0, length = classes.length; i < length; i++) {
+      this.remove(classes[i])
+    }
   }
 
   
@@ -196,8 +217,7 @@ window.addEventListener('DOMContentLoaded', () => {
     return excludedNumArr
   }
 
-  function dummy(excludedNumArr) {
-    
+  function dummy(excludedNumArr) { 
     excludedNumArr.forEach(num => {
       squares[num].classList.add('dummy')
     })
