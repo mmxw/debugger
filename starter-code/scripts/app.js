@@ -16,9 +16,10 @@ window.addEventListener('DOMContentLoaded', () => {
   
   let bombCount //TODO
   let flagCount //TODO
+  let currentIndex 
   
   function init() {
-    generateGrid() //* TESTING, passed
+    generateGrid() //* TEST, passed
     
     
     
@@ -46,7 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
           clicked(square)
         }
       })
-      // square.addEventListener('contextmenu', placeFlag)
+      //? square.addEventListener('contextmenu', placeFlag)
       squares.push(square)
       board.appendChild(square)
     })
@@ -62,25 +63,65 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function clicked(square) {
     // game rules when square clicked (other than 1st click)
+    // if clicked is a bomb, then finish game 
+    // if clicked is empty, then automatically click the surrounding 8 grids; for each of the 8 grids: repeat game rules
+    // if clicked is nonempty (i.e., bombs in some of the surrounding 8 grids), display the bombCount 
+
     square.classList.add('clicked')
     console.log(squares.indexOf(square), 'was clicked')
     if (square.classList.contains('bomb')) {
       //explode()
       finishGame()
-    } 
+    } else {
+      
+      currentIndex = getCurrentIndex(square)
+      bombCount = countBombs(currentIndex)
+      console.log(bombCount)
+
+      if (bombCount === 0) {
+        square.classList.add('empty-grid')
+        //TODO clickedEmpty(index)
+        //TODO automaticClick(index)
+        
+      } else {
+        square.classList.add('nonempty-grid')
+        //TODO clickedNonEmpty(index)
+
+      }
+    }
+    
     //TODO 
     // countBombs()
     // placeFlags()
   }
 
+  function getCurrentIndex(square) {
+    return squares.indexOf(square)
+
+  }
+
+  function countBombs(currentIndex) {
+    let count = 0
+    const neighboringGrids = [squares[currentIndex - 13], squares[currentIndex - 12], squares[currentIndex - 11], squares[currentIndex - 1], squares[currentIndex + 1], squares[currentIndex + 11], squares[currentIndex + 12], squares[currentIndex + 13]]
+    for (const item of neighboringGrids) {
+      if (item.classList.contains('bomb')) {
+        count++
+      }
+    }
+    return count
+
+  }
+
+  function placeFlag() {
+
+  }
+  
 
   // function placeFlag(e, square) {
   //   e.preventDefault()
   //   square.classList.toggle('flagged-grid')
   // }
 
-
-  
 
 
   
@@ -105,7 +146,7 @@ window.addEventListener('DOMContentLoaded', () => {
   
   function resetTimer() {
     clearInterval(timerID)
-    timerDisplay.textContent = 0
+    timerDisplay.textContent = 999
   }
 
   
