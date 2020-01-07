@@ -36,6 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
     Array(width * width).join('.').split('.').forEach(() => {
       const square = document.createElement('div')
       square.classList.add('grid-item')
+      
 
       square.addEventListener('click', () => {
         if (!gameInPlay) {
@@ -51,6 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
       })
       
       squares.push(square)
+      
       board.appendChild(square)
     })
     
@@ -72,7 +74,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // if clicked is empty, then automatically click the surrounding 8 grids; for each of the 8 grids: repeat game rules
     // if clicked is nonempty (i.e., bombs in some of the surrounding 8 grids), display the bombCount 
 
-    square.classList.add('clicked')
+    square.classList.add('clicked-grid')
     //console.log(squares.indexOf(square), 'was clicked')
 
     currentIndex = getCurrentIndex(square)
@@ -81,13 +83,14 @@ window.addEventListener('DOMContentLoaded', () => {
     if (square.classList.contains('bomb')) {
       //TODO explode()
       finishGame()
-    } else if (square.classList.contains('dummy')) {
-      square.innerHTML = ''
-    } else {
+    } 
+    //  else if (square.classList.contains('clicked-grid')) return
+    else {
       //console.log(bombCount)
       if (bombCount === 0) {
         square.classList.add('empty-grid')
-        automaticClick(squares.indexOf(square))     
+        console.log('empty grid at', currentIndex) //* TESTING
+        automaticClick(currentIndex)     
       } else {
         square.classList.add('nonempty-grid')
         square.innerHTML = bombCount
@@ -99,15 +102,14 @@ window.addEventListener('DOMContentLoaded', () => {
     //TODO STILL NOT WORKING RIGHT
 
     const neighboringIndex = [currentIndex - 13, currentIndex - 12, currentIndex - 11, currentIndex - 1, currentIndex + 1, currentIndex + 11, currentIndex + 12, currentIndex + 13]
-
-    switch (true) {
-      case excludedNumArr.includes(currentIndex): 
-        break
-      default: 
-        for (let i = 0; i < neighboringIndex.length; i++) {
-          clicked(squares[neighboringIndex[i]])           
-        }
+    
+    for (let i = 0; i < neighboringIndex.length; i++) {
+      const square = squares[neighboringIndex[i]]
+      if (square.classList.contains('clicked-grid')) return
+      else clicked(square)
+      console.log('automatically clicking neighbors of', currentIndex ) //* TESTING          
     }
+    
   
   }  
 
@@ -184,6 +186,13 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  DOMTokenList.prototype.addClasses = function(classes) {
+    //custom method for adding multiple classes  
+    for (let i = 0, length = classes.length; i < length; i++) {
+      this.add(classes[i])
+    }
+  }
+
   
   function randomizeBombs() {
     // any 12 grids on the board 
@@ -233,6 +242,7 @@ window.addEventListener('DOMContentLoaded', () => {
   function dummy(excludedNumArr) { 
     excludedNumArr.forEach(num => {
       squares[num].classList.add('dummy')
+      squares[num].classList.add('clicked-grid')
     })
   }
 
@@ -246,9 +256,9 @@ window.addEventListener('DOMContentLoaded', () => {
 //* function missionFailed() //losing (instead of finishGame())
 // if clicked on a bomb
 // if some bombs are not flagged before timeOut
-  //* function destructFlag()
-  // at the end of game, destruct flags that are misplaced
-  //
+//* function destructFlag()
+// at the end of game, destruct flags that are misplaced
+//
 
 
 
