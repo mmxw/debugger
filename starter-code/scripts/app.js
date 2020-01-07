@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-  //VARIABLES
+  //!VARIABLES
 
   const squares = [] //NodeList of grid elements
   const width = 12
@@ -12,18 +12,19 @@ window.addEventListener('DOMContentLoaded', () => {
   const board = document.querySelector('#board')
   const timerDisplay = document.querySelector('.time-countdown')
   const firstClick = document.querySelector('.first-click')
-  const clickedGrids = document.querySelectorAll('.clicked') 
+  const flagCount = document.querySelector('.flag-number')
+  //const clickedGrids = document.querySelectorAll('.clicked') 
+  
   
   let bombCount 
-  let flagCount //TODO
   let currentIndex 
   
-
+  //!RUN THESE FUNCTIONS
   generateGrid() 
   excludedItems(width)
   dummy(excludedNumArr)
   
-  //FUNCTIONS
+  //!FUNCTIONS
   
   //SET UP GAME BOARD
   
@@ -49,24 +50,20 @@ window.addEventListener('DOMContentLoaded', () => {
         rightClicked(square)
       })
       
-
-
-      //? square.addEventListener('contextmenu', placeFlag)
       squares.push(square)
-      
       board.appendChild(square)
     })
     
-    timer()
   } 
 
   function startGame(square) {
     // first click triggers random bomb-generating
-    
+    clearGrid()
     square.classList.add('first-click')
     gameInPlay = true
     randomizeBombs()
-    
+    timer()
+    //TODO first click triggers automatic clicks on neighboring grids 
   }
 
   function clicked(square) {
@@ -76,7 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // if clicked is nonempty (i.e., bombs in some of the surrounding 8 grids), display the bombCount 
 
     square.classList.add('clicked')
-    console.log(squares.indexOf(square), 'was clicked')
+    //console.log(squares.indexOf(square), 'was clicked')
 
     currentIndex = getCurrentIndex(square)
     bombCount = countBombs(currentIndex)
@@ -84,34 +81,38 @@ window.addEventListener('DOMContentLoaded', () => {
     if (square.classList.contains('bomb')) {
       //TODO explode()
       finishGame()
-
     } else if (square.classList.contains('dummy')) {
       square.innerHTML = ''
     } else {
-
       //console.log(bombCount)
-
       if (bombCount === 0) {
         square.classList.add('empty-grid')
-        //TODO clickedEmpty(index)
-        //TODO automaticClick(index)
-        
+        automaticClick(squares.indexOf(square))     
       } else {
         square.classList.add('nonempty-grid')
         square.innerHTML = bombCount
-        //TODO clickedNonEmpty(index)
-        
       }
-    }
-    
-    //TODO 
-    
-    // placeFlags()
+    }    
   }
 
-  function getCurrentIndex(square) {
-    return squares.indexOf(square)
+  function automaticClick(currentIndex) {
+    //TODO STILL NOT WORKING RIGHT
 
+    const neighboringIndex = [currentIndex - 13, currentIndex - 12, currentIndex - 11, currentIndex - 1, currentIndex + 1, currentIndex + 11, currentIndex + 12, currentIndex + 13]
+
+    switch (true) {
+      case excludedNumArr.includes(currentIndex): 
+        break
+      default: 
+        for (let i = 0; i < neighboringIndex.length; i++) {
+          clicked(squares[neighboringIndex[i]])           
+        }
+    }
+  
+  }  
+
+  function getCurrentIndex(square) {   
+    return squares.indexOf(square)
   }
 
   function countBombs(currentIndex) {
@@ -123,34 +124,23 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
     return count
-
   } 
 
   function rightClicked(square) {
-    
     // right click to place a flag
     if (!square.classList.contains('flagged-grid')) {
       square.classList.toggle('flagged-grid')
       square.innerHTML = '&#x1F6A9;'
-      
+      if (flagCount.innerHTML > 0) flagCount.innerHTML--
+      else {
+        alert('you\'ve run out of flags!')
+      }    
     } else {
       square.classList.toggle('flagged-grid')
       square.innerHTML = ''
-    }
-    
-    
-    
+      flagCount.innerHTML++
+    }   
   }
-
-  // function placeFlag() {
-
-  // }
-  
-
-  // function placeFlag(e, square) {
-  //   e.preventDefault()
-  //   square.classList.toggle('flagged-grid')
-  // }
 
   function timer() {
     timerID = setInterval(countDown, 1000)
@@ -170,24 +160,25 @@ window.addEventListener('DOMContentLoaded', () => {
     resetTimer()
     alert('GAME OVER')
     clearGrid()
+    location.reload()
   }
   
   function resetTimer() {
     clearInterval(timerID)
     timerDisplay.textContent = 999
+    setInterval(timerID)
   }
 
   function clearGrid() {
+    resetTimer()
     squares.forEach(square => {
       square.classList.removeClasses(['first-click', 'empty-grid', 'nonempty-grid', 'bomb', 'flagged-grid'])
       square.innerHTML = ''
-
     })
-      
   }
 
   DOMTokenList.prototype.removeClasses = function(classes) {
-    
+    //custom method for removing multiple classes  
     for (let i = 0, length = classes.length; i < length; i++) {
       this.remove(classes[i])
     }
@@ -195,8 +186,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   
   function randomizeBombs() {
-    // any 12 grids on the board
-    // other than the first one clicked (let clicked = the index of the clicked grid) 
+    // any 12 grids on the board 
+    // other than the first one clicked (let clicked = the index of the clicked grid) and the dummy grids
     if (gameInPlay) {
       const randomBombIndex = generateRandomNums(0, 143)
 
@@ -204,29 +195,27 @@ window.addEventListener('DOMContentLoaded', () => {
         squares[index].classList.add('bomb')
         //console.log(index, 'bomb here')
       })
-
-    }
-    
+    }  
   }  
 
   function generateRandomNums(min, max) {
+    // generate random numbers that excludes the dummy grid indexes
+
     const randomNumbers = new Set()
     
     while (randomNumbers.size < Math.sqrt(max + 1)) {
-
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
-
       if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
         randomNumbers.add(randomNum)
       }
-
-      //console.log('bomb indexes', randomNumbers, new Error().stack)
-      
+      //console.log('bomb indexes', randomNumbers, new Error().stack)  
     }
     return randomNumbers
   }
 
   function excludedItems(width) {
+    // excludes the dummy grids, i.e., the outer invisible grids
+
     const topRow = _.range(0, width)
     const bottomRow = _.range(width * 11, width * 12)
     let middleRows = []
@@ -247,5 +236,67 @@ window.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  
 })
+
+
+//TODO 
+//* function missionAccomplished() //winning
+// if all 12 bombs are successfully flagged before timeOut
+
+//* function missionFailed() //losing (instead of finishGame())
+// if clicked on a bomb
+// if some bombs are not flagged before timeOut
+  //* function destructFlag()
+  // at the end of game, destruct flags that are misplaced
+  //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// for (let i = 0; i < neighboringIndex.length; i++) {
+//click each of the 8 grids
+//for each grid, if it is empty, clickEmpty() automaticClick()
+//if it is non-empty, display the bombCount 
+// bombCount = countBombs(squares[neighboringIndex[i]])
+// if (bombCount === 0) {
+//   clickedEmpty(squares[neighboringIndex[i]])
+// } else {
+//   clickedNonEmpty(squares[neighboringIndex[i]])
+
+// }
+
+
+// bombCount = countBombs(squares[neighboringIndex[i]])
+// if (bombCount === 0) {
+//   squares[neighboringIndex[i]].classList.add('empty-grid')
+//   automaticClick(squares[neighboringIndex[i]])       
+// } else {
+//   squares[neighboringIndex[i]].classList.add('nonempty-grid')
+//   squares[neighboringIndex[i]].innerHTML = bombCount 
+// } 
+
+
+
+// function clickedEmpty(square) {
+//    //TODO
+// }
+
+// function clickedNonEmpty(square) {
+    
+// }
