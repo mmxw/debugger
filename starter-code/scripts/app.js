@@ -13,14 +13,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const timerDisplay = document.querySelector('.time-countdown')
   const firstClick = document.querySelector('.first-click')
   const flagCount = document.querySelector('.flag-number')
-  // const bombGrids = document.querySelectorAll('.bomb')
-  // const flaggedGrids = document.querySelectorAll('.flagged-grid')
-  // let bombArr = Array.from(bombGrids)
-  // let flagArr = Array.from(flaggedGrids)
-  
-  //const clickedGrids = document.querySelectorAll('.clicked') 
-  
-  
+  const bombGrids = () => document.querySelectorAll('.bomb')
+  const flaggedGrids = () => document.querySelectorAll('.flagged-grid')
+  // const clickedGrids = document.querySelectorAll('.clicked') 
+   
   let bombCount 
   let currentIndex 
   
@@ -28,7 +24,6 @@ window.addEventListener('DOMContentLoaded', () => {
   generateGrid() 
   excludedItems(width)
   dummy(excludedNumArr)
-  
   
   
   //!FUNCTIONS
@@ -85,27 +80,32 @@ window.addEventListener('DOMContentLoaded', () => {
     // if clicked is empty, then automatically click the surrounding 8 grids; for each of the 8 grids: repeat game rules
     // if clicked is nonempty (i.e., bombs in some of the surrounding 8 grids), display the bombCount 
 
-    square.classList.add('clicked-grid')
-    //console.log(squares.indexOf(square), 'was clicked')
-
-    currentIndex = getCurrentIndex(square)
-    bombCount = countBombs(currentIndex)
-
-    if (square.classList.contains('bomb')) {
-      //TODO explode()
-      console.log('bomb was clicked at', currentIndex)
-      finishGame()
-    } else {
-      //console.log(bombCount)
-      if (bombCount === 0) {
-        square.classList.add('empty-grid')
-        console.log('empty grid at', currentIndex) //* TESTING
-        automaticClick(currentIndex)     
+    if (square.classList.contains('dummy')) return
+    else {
+      square.classList.add('clicked-grid')
+      //console.log(squares.indexOf(square), 'was clicked')
+  
+      currentIndex = getCurrentIndex(square)
+      bombCount = countBombs(currentIndex)
+  
+      if (square.classList.contains('bomb')) {
+        //TODO explode()
+        console.log('bomb was clicked at', currentIndex)
+        missionFailed()
       } else {
-        square.classList.add('nonempty-grid')
-        square.innerHTML = bombCount
+        //console.log(bombCount)
+        if (bombCount === 0) {
+          square.classList.add('empty-grid')
+          console.log('empty grid at', currentIndex) //* TESTING
+          automaticClick(currentIndex)     
+        } else {
+          square.classList.add('nonempty-grid')
+          square.innerHTML = bombCount
+        }
       }
-    }    
+    }
+    
+       
   }
 
   function automaticClick(currentIndex) {
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function rightClicked(square) {
     // right click to place a flag
-    if (!gameInPlay) return 
+    if (!gameInPlay || square.classList.contains('dummy')) return 
     else {
       if (!square.classList.contains('flagged-grid')) {
         square.classList.toggle('flagged-grid')
@@ -154,8 +154,15 @@ window.addEventListener('DOMContentLoaded', () => {
         flagCount.innerHTML++
       }   
     }
+    let bombArr = Array.from(bombGrids())
+    let flagArr = Array.from(flaggedGrids())
 
-    
+    console.log(flagArr) //* TESTING
+
+    if (flagArr.length === 12 && equalArrays(bombArr, flagArr)) {
+      missionAccomplished()
+    }
+
   }
 
   function timer() {
@@ -174,7 +181,6 @@ window.addEventListener('DOMContentLoaded', () => {
   function finishGame() {
     gameInPlay = false
     resetTimer()
-    alert('GAME OVER')
     clearGrid()
     location.reload()
   }
@@ -189,8 +195,7 @@ window.addEventListener('DOMContentLoaded', () => {
     resetTimer()
     squares.forEach(square => {
       const cls = ['first-click', 'empty-grid', 'nonempty-grid', 'bomb', 'flagged-grid']
-      cls.forEach(cl => removeClasses(square, cl))
-      
+      cls.forEach(cl => removeClasses(square, cl)) 
       square.innerHTML = ''
     })
   }
@@ -218,7 +223,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const randomNumbers = new Set()
     
-    while (randomNumbers.size < 24) {
+    while (randomNumbers.size < 12) {
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
       if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
         randomNumbers.add(randomNum)
@@ -252,55 +257,38 @@ window.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  
-
-  function missionAccomplished() { 
-    
-    
-    console.log(bombArr, flagArr, 'are equal arrays?') //! TESTING both are null
-    if (gameInPlay && bombArr.length === 12 && equalArrays(bombArr, flagArr)) {
-      alert('CONGRATULATIONS! MISSION ACCOMPLISHED!!!')
-      gameInPlay = false
-      resetTimer()  
-      clearGrid()
-      location.reload()
-      console.log('bombArr and flagArr are equal') //* TESTING
-    }
+  function missionAccomplished() {  
+    alert('CONGRATULATIONS! MISSION ACCOMPLISHED!!!')
+    finishGame()    
   }
 
-  
+  function missionFailed() {
+    finishGame()
+    //TODO explode()
+    alert('SORRY! MISSION FAILED')
+  }
 
   function equalArrays(arr1, arr2) {
     if (arr1.length !== arr2.length) return false
 
-    const arr1Sorted = arr1.concat().sort()
-    const arr2Sorted = arr2.concat().sort()
+    // const arr1Sorted = arr1.concat().sort()
+    // const arr2Sorted = arr2.concat().sort()
     for (let i = 0; i < arr1.length; i++) {
-      if (arr1Sorted[i] !== arr2Sorted[i]) return false
+      if (arr1[i] !== arr2[i]) return false
     }
     
     return true
-  }
-
-  missionAccomplished()
-
-  function missionFailed() {
-    
   }
 
 })
 
 
 //TODO 
-//* function missionAccomplished() //winning
-// if all 12 bombs are successfully flagged before timeOut
 
-//* function missionFailed() //losing (instead of finishGame())
-// if clicked on a bomb
-// if some bombs are not flagged before timeOut
 //* function destructFlag()
 // at the end of game, destruct flags that are misplaced
-//
+//* function explode()
+// when clicked on a bomb, make board explode
 
 
 
