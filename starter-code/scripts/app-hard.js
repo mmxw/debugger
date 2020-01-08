@@ -159,7 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     console.log(flagArr) //* TESTING
 
-    if (flagArr.length === 12 && equalArrays(bombArr, flagArr)) {
+    if (flagArr.length === 36 && equalArrays(bombArr, flagArr)) {
       missionAccomplished()
     }
 
@@ -223,7 +223,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const randomNumbers = new Set()
     
-    while (randomNumbers.size < 12) {
+    while (randomNumbers.size < 36) {
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
       if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
         randomNumbers.add(randomNum)
