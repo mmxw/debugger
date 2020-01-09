@@ -15,7 +15,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const flagCount = document.querySelector('.flag-number')
   const bombGrids = () => document.querySelectorAll('.bomb')
   const flaggedGrids = () => document.querySelectorAll('.flagged-grid')
-  // const clickedGrids = document.querySelectorAll('.clicked') 
    
   let bombCount 
   let currentIndex 
@@ -24,7 +23,6 @@ window.addEventListener('DOMContentLoaded', () => {
   generateGrid() 
   excludedItems(width)
   dummy(excludedNumArr)
-  
   
   //!FUNCTIONS
   
@@ -55,8 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
       squares.push(square)
       
       board.appendChild(square)
-    })
-    
+    })   
     
   } 
 
@@ -103,9 +100,7 @@ window.addEventListener('DOMContentLoaded', () => {
           square.innerHTML = bombCount
         }
       }
-    }
-    
-       
+    }      
   }
 
   function automaticClick(currentIndex) {
@@ -279,6 +274,26 @@ window.addEventListener('DOMContentLoaded', () => {
     
     return true
   }
+
+  // function selectRedirect() {
+  //   switch (levels.value) {
+  //     case 'easy':
+  //       location = '../easy.html'
+  //       break
+  //     case 'medium': 
+  //       location = '../medium.html'
+  //       break
+  //     case 'hard': 
+  //       location = '../hard.html'
+  //       break
+  //     default: 
+  //       location = '../'
+  //       break
+
+  //   }
+  // }
+
+  
 
 })
 

@@ -22,7 +22,7 @@ h1 {
 
 .panel {
   display: flex;
-  width: 440px;
+  width: 400px;
   height: 32px;
   flex-direction: row;
   justify-content: space-between;
@@ -56,22 +56,24 @@ h1 {
 }
 
 
-.flag {
+.flag-top {
   height: 3ch;
   width: 3ch;
-  
+  padding: 0px 2px;
 }
 
 .flag-number {
-  padding: 3px 5px;
+  padding: 6px 4px;
 }
+
 
 .clock {
   height: 3ch;
   width: 3ch;
 }
 
-.board {
+
+#board {
   display: flex;
   flex-wrap: wrap;
   height: 480px;
@@ -87,18 +89,40 @@ h1 {
 
 }
 
+.clicked-grid {
+  background-color: linen;
+}
+
+.flagged-grid {
+  display: grid;
+  background-color: lightyellow !important;
+  align-items: center;
+  justify-items: center;
+}
+
 .empty-grid {
-  background-color: lightgray;
+  background-color: lightgray !important;
 }
 
 .nonempty-grid {
-  background-color: lightsteelblue;
+  display: grid;
+  background-color: lightyellow !important;
+  align-items: center;
+  justify-items: center;
 }
+.dummy {
+  border-style: hidden !important;
+  background-color: white !important;
+
+}
+/* .clicked {
+  background-color: lightskyblue ;
+} */
 
 .bomb {
   background-color: greenyellow;
 }
 
-/* #first-click {
-  background-color: lightgray;
-} */
+.first-click {
+  background-color: red;
+}

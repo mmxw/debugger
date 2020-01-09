@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const flagCount = document.querySelector('.flag-number')
   const bombGrids = () => document.querySelectorAll('.bomb')
   const flaggedGrids = () => document.querySelectorAll('.flagged-grid')
+  const levels = document.querySelector('levels')
   // const clickedGrids = document.querySelectorAll('.clicked') 
    
   let bombCount 
@@ -24,6 +25,8 @@ window.addEventListener('DOMContentLoaded', () => {
   generateGrid() 
   excludedItems(width)
   dummy(excludedNumArr)
+
+  
   
   
   //!FUNCTIONS
@@ -279,6 +282,26 @@ window.addEventListener('DOMContentLoaded', () => {
     
     return true
   }
+
+  // function selectRedirect() {
+  //   switch (levels.value) {
+  //     case 'easy':
+  //       location = '../easy.html'
+  //       break
+  //     case 'medium': 
+  //       location = '../medium.html'
+  //       break
+  //     case 'hard': 
+  //       location = '../hard.html'
+  //       break
+  //     default: 
+  //       location = '../'
+  //       break
+
+  //   }
+  // }
+
+  // levels.addEventListener('change', selectRedirect)
 
 })
 
