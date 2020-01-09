@@ -2,47 +2,76 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>MINESWEEPER - easy level</title>
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
-    <script src = 'scripts/app-easy.js'></script>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>DEBUGGER</title>
+    <!-- <script src = "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script> -->
+    <script src = 'scripts/app.js'></script>
+    <link rel="stylesheet" href="styles/game.css">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+
   </head>
   <body>
-    
-    <div class="container">
-      <h1>MINSWEEPER</h1>
-      <div class="panel">
-        <div class="form" >
-          <select id="levels" name="levels">
-            <option value="easy">EASY</option>
-            <option value="medium">MEDIUM</option>
-            <option value="hard">HARD</option>
-          </select>
+
+<!-- game page  -->
+    <div class="game-page">
+
+      <div class="left"></div>
+      <div class="container">
+
+        <h1>DEBUGGER</h1>
+        
+        <div class="panel"> 
+          <div class="timer">
+            <img class="clock" src="assets/clock3.png">
+            <span class="time-countdown">999</span>
+          </div>
+          <div class="wp-counter">
+            <img class="woodpecker" src="assets/wp4.png">
+            <span class="wp-number">12</span> 
+          </div>
+        
         </div>
-        <div class="timer">
-          <img class="clock" src="assets/timer-icon-74553.png">
-          <span class="time-countdown">999</span>
+
+        <div id="board">
+          <!-- placeholder for generated grids -->
         </div>
-        <div class="flagCounter">
-          <span class="flag-top">&#x1F6A9;</span>
-          <span class="flag-number">12</span>
-          
-        </div>
+
+        <div id="placeholder-div"></div>
+
       </div>
-
-      <div id="board">
-      
-        <!-- placeholder for generated grids -->
-
-
-
-      </div>
-
-
-
-
-
+  
+      <div class="right"></div> 
 
     </div>
+    
+
+<!-- popup window after game finishes -->
+     
+    <div class="popup-lose">
+      <div class="lose-message">
+        <h2>OOPS...</h2>
+        <img src="assets/paused.png" class="paused-in-debugger">
+        <p class="msg1">But don't worry!</p>
+        <p class="msg1">Everyone gets better at debugging over time!</p>
+        <div class='bug-text'>
+          <img src="assets/lb1.gif" class="lady-bug2"><span class="msg2">Wanna try again?</span><img src="assets/lb1.gif" class="lady-bug2">
+        </div>
+        
+        <div class="play-again">
+          <button class="yes">YES! Play again!</button>
+          <button class="no">Nah, maybe next time. </button>
+        </div>
+      </div>  
+    </div>
+  
+    <div class="popup-win">
+      <div class="win-message">
+        <h2>YAY!</h2>
+        <p class="msg3">Your garden is now bug-free!</p> 
+        <p class="msg3">Enjoy the fruit of your hardwork!</p>
+        <img src="assets/garden-harvest.jpg" class="enjoy">
+      </div>
+    </div>   
   </body>
+
 </html>
