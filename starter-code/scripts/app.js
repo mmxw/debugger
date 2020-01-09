@@ -1,4 +1,30 @@
 window.addEventListener('DOMContentLoaded', () => {
+
+  //! SWITCHING DIFFICULTY LEVELS
+
+  const isEasyMode = window.location.pathname.includes('easy.html')
+  const isMediumMode = !isEasyMode && window.location.pathname.includes('medium.html')
+  const isHardMode = !isEasyMode && !isMediumMode && window.location.pathname.includes('hard.html')
+  
+  let bugTotal
+  
+
+  function switchMode() {
+    switch (true) {
+      case isEasyMode:
+        bugTotal = 12
+        break
+      case isMediumMode:
+        bugTotal = 24
+        break
+      case isHardMode:
+        bugTotal = 36
+        break
+      default:
+        throw Error('no such mode')
+    }
+  }
+
   //!VARIABLES
 
   const squares = [] //NodeList of grid elements
@@ -11,23 +37,21 @@ window.addEventListener('DOMContentLoaded', () => {
   
   const board = document.querySelector('#board')
   const timerDisplay = document.querySelector('.time-countdown')
-  const firstClick = document.querySelector('.first-click')
-  const flagCount = document.querySelector('.flag-number')
-  const bombGrids = () => document.querySelectorAll('.bomb')
-  const flaggedGrids = () => document.querySelectorAll('.flagged-grid')
-  const levels = document.querySelector('levels')
-  // const clickedGrids = document.querySelectorAll('.clicked') 
+  const firstClick = () => document.querySelector('.first-click')
+  const wpCount = document.querySelector('.wp-number')
+  const bugGrids = () => document.querySelectorAll('.bug')
+  const peckedGrids = () => document.querySelectorAll('.pecked-grid')
+  const popupWin = document.querySelector('.popup-win')
+  const popupLose = document.querySelector('.popup-lose')
    
-  let bombCount 
+  let bugCount 
   let currentIndex 
   
   //!RUN THESE FUNCTIONS
   generateGrid() 
   excludedItems(width)
   dummy(excludedNumArr)
-
-  
-  
+  switchMode()
   
   //!FUNCTIONS
   
@@ -36,8 +60,9 @@ window.addEventListener('DOMContentLoaded', () => {
   function generateGrid() {
     // generate grid
     // start timer
-    // user first click trigger's random bomb-generating
+    // user first click trigger's random bug-generating
     // alerts player when time's up
+
     Array(width * width).join('.').split('.').forEach(() => {
       const square = document.createElement('div')
       square.classList.add('grid-item')
@@ -59,29 +84,27 @@ window.addEventListener('DOMContentLoaded', () => {
       
       board.appendChild(square)
     })
-    
-    
+
   } 
 
   function startGame(square) {
-    // first click triggers random bomb-generating
+    // first click triggers random bug-generating
     clearGrid()
     square.classList.add('first-click')
     square.classList.add('clicked-grid')
     square.classList.add('empty-grid')
-    console.log(getCurrentIndex(square), 'was clicked')
+    console.log(getCurrentIndex(square), 'was first click')
     gameInPlay = true
-    randomizeBombs()
+    randomizeBugs()
     automaticClick(getCurrentIndex(square))
-    timer()
-    
+    timer()  
   }
 
   function clicked(square) {
     // game rules when square clicked (other than 1st click)
-    // if clicked is a bomb, then finish game 
+    // if clicked is a bug, then finish game 
     // if clicked is empty, then automatically click the surrounding 8 grids; for each of the 8 grids: repeat game rules
-    // if clicked is nonempty (i.e., bombs in some of the surrounding 8 grids), display the bombCount 
+    // if clicked is nonempty (i.e., bugs in some of the surrounding 8 grids), display the bugCount 
 
     if (square.classList.contains('dummy')) return
     else {
@@ -89,25 +112,24 @@ window.addEventListener('DOMContentLoaded', () => {
       //console.log(squares.indexOf(square), 'was clicked')
   
       currentIndex = getCurrentIndex(square)
-      bombCount = countBombs(currentIndex)
+      bugCount = countBugs(currentIndex)
   
-      if (square.classList.contains('bomb')) {
+      if (square.classList.contains('bug')) {
         //TODO explode()
-        console.log('bomb was clicked at', currentIndex)
-        missionFailed()
+        console.log('bug was clicked at', currentIndex)
+        lose()
       } else {
-        //console.log(bombCount)
-        if (bombCount === 0) {
+        //console.log(bugCount)
+        if (bugCount === 0) {
           square.classList.add('empty-grid')
           console.log('empty grid at', currentIndex) //* TESTING
           automaticClick(currentIndex)     
         } else {
           square.classList.add('nonempty-grid')
-          square.innerHTML = bombCount
+          square.innerHTML = bugCount
         }
       }
-    }
-    
+    }  
        
   }
 
@@ -118,7 +140,7 @@ window.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < neighboringIndex.length; i++) {
       const square = squares[neighboringIndex[i]]
       if (square.classList.contains('clicked-grid')) continue
-      else if (square.classList.contains('bomb')) continue
+      else if (square.classList.contains('bug')) continue
       else clicked(square)
       console.log('automatically clicking neighbors of', currentIndex ) //* TESTING          
     }
@@ -129,11 +151,11 @@ window.addEventListener('DOMContentLoaded', () => {
     return squares.indexOf(square)
   }
 
-  function countBombs(currentIndex) {
+  function countBugs(currentIndex) {
     let count = 0
     const neighboringGrids = [squares[currentIndex - 13], squares[currentIndex - 12], squares[currentIndex - 11], squares[currentIndex - 1], squares[currentIndex + 1], squares[currentIndex + 11], squares[currentIndex + 12], squares[currentIndex + 13]]
     for (const item of neighboringGrids) {
-      if (item.classList.contains('bomb')) {
+      if (item.classList.contains('bug')) {
         count++
       }
     }
@@ -141,29 +163,29 @@ window.addEventListener('DOMContentLoaded', () => {
   } 
 
   function rightClicked(square) {
-    // right click to place a flag
+    // right click to place a wp
     if (!gameInPlay || square.classList.contains('dummy')) return 
     else {
-      if (!square.classList.contains('flagged-grid')) {
-        square.classList.toggle('flagged-grid')
-        square.innerHTML = '&#x1F6A9;'
-        if (flagCount.innerHTML > 0) flagCount.innerHTML--
+      if (!square.classList.contains('pecked-grid')) {
+        square.classList.toggle('pecked-grid')
+        square.innerHTML = '<img class="woodpecker" src="assets/wp4.png">'
+        if (wpCount.innerHTML > 0) wpCount.innerHTML--
         else {
-          alert('you\'ve run out of flags!')
+          alert('you\'ve run out of woodpeckers!')
         }    
       } else {
-        square.classList.toggle('flagged-grid')
+        square.classList.toggle('pecked-grid')
         square.innerHTML = ''
-        flagCount.innerHTML++
+        wpCount.innerHTML++
       }   
     }
-    const bombArr = Array.from(bombGrids())
-    const flagArr = Array.from(flaggedGrids())
+    const bugArr = Array.from(bugGrids())
+    const wpArr = Array.from(peckedGrids())
 
-    console.log(flagArr) //* TESTING
+    // console.log(wpArr) //* TESTING
 
-    if (flagArr.length === 12 && equalArrays(bombArr, flagArr)) {
-      missionAccomplished()
+    if (wpArr.length === bugTotal && equalArrays(bugArr, wpArr)) {
+      win()
     }
 
   }
@@ -174,18 +196,29 @@ window.addEventListener('DOMContentLoaded', () => {
   
   function countDown() {
     if (timeRemaining === 900) {
-      finishGame()
+      lose()
     } else {
       timerDisplay.innerHTML = timeRemaining
       timeRemaining--
     }
   }
   
-  function finishGame() {
+  function win() {
     gameInPlay = false
     resetTimer()
     clearGrid()
-    location.reload()
+    //! if reload, the popup page doesn't show up
+    // location.reload()
+
+    popupWin.style.display = 'block'
+  }
+
+  function lose() {
+    gameInPlay = false
+    resetTimer()
+    clearGrid()
+    popupLose.style.display = 'block'
+ 
   }
   
   function resetTimer() {
@@ -197,7 +230,7 @@ window.addEventListener('DOMContentLoaded', () => {
   function clearGrid() {
     resetTimer()
     squares.forEach(square => {
-      const cls = ['first-click', 'empty-grid', 'nonempty-grid', 'bomb', 'flagged-grid']
+      const cls = ['first-click', 'empty-grid', 'nonempty-grid', 'bug', 'pecked-grid']
       cls.forEach(cl => removeClasses(square, cl)) 
       square.innerHTML = ''
     })
@@ -207,16 +240,16 @@ window.addEventListener('DOMContentLoaded', () => {
     el.classList.remove(cl)
   }
 
-  function randomizeBombs() {
+  function randomizeBugs() {
     // any 12 grids on the board 
     // other than the first one clicked (let clicked = the index of the clicked grid) and the dummy grids
     if (gameInPlay) {
-      const randomBombIndex = generateRandomNums(0, 143)
+      const randomBugIndex = generateRandomNums(0, 143)
       let total = 0
-      randomBombIndex.forEach(index => {
-        squares[index].classList.add('bomb')
+      randomBugIndex.forEach(index => {
+        squares[index].classList.add('bug')
         total++
-        console.log(index, `${total}th bomb here`)
+        console.log(index, `${total}th bug here`)
       })
     }  
   }  
@@ -226,12 +259,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const randomNumbers = new Set()
     
-    while (randomNumbers.size < 12) {
+    while (randomNumbers.size < bugTotal) {
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
-      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
+      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick())))) {
         randomNumbers.add(randomNum)
       }
-      //console.log('bomb indexes', randomNumbers, new Error().stack)  
+      //console.log('bug indexes', randomNumbers, new Error().stack)  
     }
     return randomNumbers
   }
@@ -239,17 +272,18 @@ window.addEventListener('DOMContentLoaded', () => {
   function excludedItems(width) {
     // excludes the dummy grids, i.e., the outer invisible grids
 
-    const topRow = _.range(0, width)
-    const bottomRow = _.range(width * 11, width * 12)
+    const topRow = [...Array(12).keys()]
+    const bottomRow = [132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143]
     let middleRows = []
 
+    
     for (let i = 1; i < 11; i++) {
       middleRows.push([width * i, width * (i + 1) - 1])
     } 
     middleRows = middleRows.flat()  
     excludedNumArr = [...topRow, ...bottomRow, ...middleRows]
     
-    //console.log(excludedNumArr, 'outer grids')
+    console.log(excludedNumArr, 'outer grids')
     return excludedNumArr
   }
 
@@ -260,55 +294,21 @@ window.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  function missionAccomplished() {  
-    alert('CONGRATULATIONS! MISSION ACCOMPLISHED!!!')
-    finishGame()    
-  }
-
-  function missionFailed() {
-    finishGame()
-    //TODO explode()
-    alert('SORRY! MISSION FAILED')
-  }
-
   function equalArrays(arr1, arr2) {
     if (arr1.length !== arr2.length) return false
 
-    // const arr1Sorted = arr1.concat().sort()
-    // const arr2Sorted = arr2.concat().sort()
     for (let i = 0; i < arr1.length; i++) {
       if (arr1[i] !== arr2[i]) return false
     }
-    
+
     return true
   }
 
-  // function selectRedirect() {
-  //   switch (levels.value) {
-  //     case 'easy':
-  //       location = '../easy.html'
-  //       break
-  //     case 'medium': 
-  //       location = '../medium.html'
-  //       break
-  //     case 'hard': 
-  //       location = '../hard.html'
-  //       break
-  //     default: 
-  //       location = '../'
-  //       break
-
+  // function range(start, end) {
+  //   let arr = []
+  //   for (let i = start; i < (end - start); i++) {
+  //     arr.push(i)
   //   }
-  // }
-  // console.log(levels)
-  
-
+  //   return arr
+  // } 
 })
-
-
-//TODO 
-
-//* function destructFlag()
-// at the end of game, destruct flags that are misplaced
-//* function explode()
-// when clicked on a bomb, make board explode
