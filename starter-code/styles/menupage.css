@@ -1,0 +1,98 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+.left {
+  width: 21vw;
+  height: 100vh;
+  background-image: url("../assets/wp1.gif");
+}
+
+.right {
+  width: 21vw;
+  height: 100vh;
+  background-image: url("../assets/wp1.gif");
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100vh;
+  width: 35vw;
+  background-color: lightgray;
+}
+
+/* header styling  */
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 3ch;
+  height: 35vh;
+  
+}
+h1 {
+  text-align: center;
+  
+}
+.subheading {
+  text-align: center;
+  font-family: 'Pacifico', cursive;
+  font-size: 24px;
+  color: goldenrod;
+}
+
+/* main styling */
+.main {
+  height: 65vh;
+}
+
+
+
+.menu {
+  height: 30vh;
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 2ch;
+}
+
+.choice {
+  height: 6vh;
+  width: 12vw;
+  text-align: center;
+  padding: 1ch;
+  border: 3px groove white;
+}
+
+button {
+  background-color: skyblue;
+  font-size: 16px;
+}
+
+.gifs {
+  display: flex;
+  height: 25vh;
+  width: 35vw;
+  justify-content: space-around;
+}
+
+.lady-bug {
+  height: 10%;
+  width: 10%;
+}
+
