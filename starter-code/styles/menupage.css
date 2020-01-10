@@ -32,6 +32,7 @@ body {
   height: 100vh;
   width: 35vw;
   background-color: lightgray;
+  font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 /* header styling  */
@@ -73,7 +74,7 @@ h1 {
 
 .choice {
   height: 6vh;
-  width: 12vw;
+  width: 15vw;
   text-align: center;
   padding: 1ch;
   border: 3px groove white;
@@ -82,6 +83,8 @@ h1 {
 button {
   background-color: skyblue;
   font-size: 16px;
+  font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  
 }
 
 .gifs {

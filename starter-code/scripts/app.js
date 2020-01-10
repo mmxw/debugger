@@ -43,6 +43,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const peckedGrids = () => document.querySelectorAll('.pecked-grid')
   const popupWin = document.querySelector('.popup-win')
   const popupLose = document.querySelector('.popup-lose')
+  const closeWindow = document.querySelector('.no')
    
   let bugCount 
   let currentIndex 
@@ -303,12 +304,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     return true
   }
+  function close() {
+    open(location, '_self').close()
+  }
 
-  // function range(start, end) {
-  //   let arr = []
-  //   for (let i = start; i < (end - start); i++) {
-  //     arr.push(i)
-  //   }
-  //   return arr
-  // } 
+  closeWindow.addEventListener('click', close)
 })

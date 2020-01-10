@@ -104,7 +104,7 @@ h1 {
 
 .pecked-grid {
   display: grid;
-  background-color: rgba(165, 158, 158, 0.226) !important;
+  background-color: rgba(250, 244, 244, 0.226) !important;
   align-items: center;
   justify-items: center;
 }
@@ -129,9 +129,9 @@ h1 {
 }
 
 
-/* .bug {
+.bug {
   background-color: greenyellow;
-} */
+}
 
 .first-click {
   background-color: red;
@@ -177,6 +177,8 @@ button {
   font-size: 16px;
   padding: 5px;
   margin: 5px 0;
+  font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  border: 3px groove white;
 }
 
 .gifs {
@@ -229,11 +231,12 @@ button {
 
 
 .lose-message {
-  color: skyblue;
+  color: red;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
 }
 
 .win-message {
@@ -242,27 +245,43 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .msg1 {
-  /* color: rgb(32, 218, 131); */
+  color: black;
   font-weight: bold;
-  font-size: xx-large;
+  font-size: large;
   font-family: 'Josefin Sans', sans-serif;
-  margin: 15px;
+  margin: 1px;
   text-align: center;
 }
 
 .paused-in-debugger {
-  height: 25%;
-  width: 25%;
+  height: 5vh;
+  width: 20vw;
+  margin-bottom: 2ch;
+  border: 2px lightgray groove;
+  box-shadow: 3px 3px 3px lightgray;
 }
-
+.lose-box {
+  width: 50vw;
+  height: 60vh;
+  background-color: lightgray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 5px 5px 5px skyblue;
+  font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  border-radius: 5%;
+  
+}
 .msg2 {
   /* color: rgb(32, 218, 131); */
   font-size: xx-large;
   font-weight: bold;
-  font-family: 'Josefin Sans', sans-serif;
+  
   padding: 50px 0;
 }
 
@@ -270,7 +289,7 @@ button {
   color: rgb(32, 218, 131);
   font-size: xx-large;
   font-weight: bold;
-  font-family: 'Josefin Sans', sans-serif;
+  
   margin: 5px;
 }
 .play-again {
@@ -280,8 +299,8 @@ button {
 }
 
 .lady-bug2 {
-  height: 7%;
-  width: 7%;
+  height: 40px;
+  width: 40px;
 }
 
 .bug-text {
@@ -297,6 +316,7 @@ button {
   filter: grayscale(30%);
   border-radius: 50%;
 }
+
 
 
 
