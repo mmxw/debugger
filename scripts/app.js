@@ -1,6 +1,29 @@
 window.addEventListener('DOMContentLoaded', () => {
 
+  //! SWITCHING DIFFICULTY LEVELS
 
+  const isEasyMode = window.location.pathname.includes('easy.html')
+  const isMediumMode = !isEasyMode && window.location.pathname.includes('medium.html')
+  const isHardMode = !isEasyMode && !isMediumMode && window.location.pathname.includes('hard.html')
+  
+  let bugTotal
+  
+
+  function switchMode() {
+    switch (true) {
+      case isEasyMode:
+        bugTotal = 12
+        break
+      case isMediumMode:
+        bugTotal = 24
+        break
+      case isHardMode:
+        bugTotal = 36
+        break
+      default:
+        throw Error('no such mode')
+    }
+  }
 
   //!VARIABLES
 
@@ -14,9 +37,9 @@ window.addEventListener('DOMContentLoaded', () => {
   
   const board = document.querySelector('#board')
   const timerDisplay = document.querySelector('.time-countdown')
-  //const firstClick = () => document.querySelector('.first-click')
-  let wpCount = document.querySelector('.wp-number')
-  
+  const firstClick = () => document.querySelector('.first-click')
+  const wpCount = document.querySelector('.wp-number')
+  // const bugGrids = () => document.querySelectorAll('.bug')
   // const peckedGrids = () => document.querySelectorAll('.pecked-grid')
   const popupWin = document.querySelector('.popup-win')
   const popupLose = document.querySelector('.popup-lose')
@@ -24,36 +47,9 @@ window.addEventListener('DOMContentLoaded', () => {
    
   let bugCount 
   let currentIndex 
+
   let bugGrids
-  let firstClick
   let peckedGrids
-
-  //! SWITCHING DIFFICULTY LEVELS
-
-  const isEasyMode = window.location.pathname.includes('easy.html')
-  const isMediumMode = !isEasyMode && window.location.pathname.includes('medium.html')
-  const isHardMode = !isEasyMode && !isMediumMode && window.location.pathname.includes('hard.html')
-    
-  let bugTotal  
-  
-  function switchMode() {
-    switch (true) {
-      case isEasyMode:
-        bugTotal = 12
-        wpCount.innerHTML = bugTotal
-        break
-      case isMediumMode:
-        bugTotal = 24
-        wpCount.innerHTML = bugTotal
-        break
-      case isHardMode:
-        bugTotal = 36
-        wpCount.innerHTML = bugTotal
-        break
-      default:
-        throw Error('no such mode')
-    }
-  }
   
   //!RUN THESE FUNCTIONS
   generateGrid() 
@@ -91,7 +87,6 @@ window.addEventListener('DOMContentLoaded', () => {
       squares.push(square)
       
       board.appendChild(square)
-      bugGrids = document.querySelectorAll('.bug')
     })
 
   } 
@@ -102,7 +97,6 @@ window.addEventListener('DOMContentLoaded', () => {
     square.classList.add('first-click')
     square.classList.add('clicked-grid')
     square.classList.add('empty-grid')
-    firstClick = document.querySelector('first-click')
     console.log(getCurrentIndex(square), 'was first click')
     gameInPlay = true
     randomizeBugs()
@@ -176,7 +170,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // right click to place a wp
     if (!gameInPlay || square.classList.contains('dummy')) return 
     else {
-      
       if (!square.classList.contains('pecked-grid')) {
         square.classList.toggle('pecked-grid')
         square.innerHTML = '<img class="woodpecker" src="assets/wp4.png">'
@@ -190,8 +183,8 @@ window.addEventListener('DOMContentLoaded', () => {
         wpCount.innerHTML++
       }   
     }
-    peckedGrids = document.querySelectorAll('pecked-grid')
-
+    peckedGrids = document.querySelectorAll('.pecked-grid')
+    bugGrids = document.querySelectorAll('.bug')
     const bugArr = Array.from(bugGrids)
     const wpArr = Array.from(peckedGrids)
 
@@ -274,7 +267,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     while (randomNumbers.size < bugTotal) {
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
-      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick)))) {
+      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick())))) {
         randomNumbers.add(randomNum)
       }
       //console.log('bug indexes', randomNumbers, new Error().stack)  
