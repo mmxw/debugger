@@ -37,19 +37,16 @@ window.addEventListener('DOMContentLoaded', () => {
   
   const board = document.querySelector('#board')
   const timerDisplay = document.querySelector('.time-countdown')
-  const firstClick = () => document.querySelector('.first-click')
   const wpCount = document.querySelector('.wp-number')
-  // const bugGrids = () => document.querySelectorAll('.bug')
-  // const peckedGrids = () => document.querySelectorAll('.pecked-grid')
   const popupWin = document.querySelector('.popup-win')
   const popupLose = document.querySelector('.popup-lose')
-  // const closeWindow = document.querySelector('.no')
-   
+
   let bugCount 
   let currentIndex 
 
   let bugGrids
   let peckedGrids
+  let firstClick
   
   //!RUN THESE FUNCTIONS
   generateGrid() 
@@ -94,9 +91,11 @@ window.addEventListener('DOMContentLoaded', () => {
   function startGame(square) {
     // first click triggers random bug-generating
     clearGrid()
+    firstClick = document.querySelector('.first-click')
     square.classList.add('first-click')
     square.classList.add('clicked-grid')
     square.classList.add('empty-grid')
+    
     console.log(getCurrentIndex(square), 'was first click')
     gameInPlay = true
     randomizeBugs()
@@ -134,7 +133,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
       }
     }  
-       
+
+
   }
 
   function automaticClick(currentIndex) {
@@ -148,7 +148,7 @@ window.addEventListener('DOMContentLoaded', () => {
       else clicked(square)
       console.log('automatically clicking neighbors of', currentIndex ) //* TESTING          
     }
- 
+
   }  
 
   function getCurrentIndex(square) {   
@@ -213,9 +213,6 @@ window.addEventListener('DOMContentLoaded', () => {
     gameInPlay = false
     resetTimer()
     clearGrid()
-    //! if reload, the popup page doesn't show up
-    // location.reload()
-
     popupWin.style.display = 'block'
   }
 
@@ -224,7 +221,6 @@ window.addEventListener('DOMContentLoaded', () => {
     resetTimer()
     clearGrid()
     popupLose.style.display = 'block'
- 
   }
   
   function resetTimer() {
@@ -257,19 +253,21 @@ window.addEventListener('DOMContentLoaded', () => {
         total++
         console.log(index, `${total}th bug here`)
       })
-    }  
+    }
   }  
 
   function generateRandomNums(min, max) {
     // generate random numbers that excludes the dummy grid indexes
 
     const randomNumbers = new Set()
-    
+
     while (randomNumbers.size < bugTotal) {
-      const randomNum = Math.floor(Math.random() * (max - min + 1)) + min 
-      if (!(excludedItems(12).includes(randomNum) || randomNumbers.has(squares.indexOf(firstClick())))) {
-        randomNumbers.add(randomNum)
-      }
+      const randomNum = Math.floor(Math.random() * (max - min + 1)) + min
+      const isDummy = excludedItems(12).includes(randomNum)
+      const isFirstClick = randomNum === (squares.indexOf(firstClick))
+      
+      if (!isDummy && !isFirstClick) randomNumbers.add(randomNum)
+      
       //console.log('bug indexes', randomNumbers, new Error().stack)  
     }
     return randomNumbers
@@ -289,7 +287,7 @@ window.addEventListener('DOMContentLoaded', () => {
     middleRows = middleRows.flat()  
     excludedNumArr = [...topRow, ...bottomRow, ...middleRows]
     
-    console.log(excludedNumArr, 'outer grids')
+    // console.log(excludedNumArr, 'outer grids')
     return excludedNumArr
   }
 
@@ -309,9 +307,5 @@ window.addEventListener('DOMContentLoaded', () => {
 
     return true
   }
-  // function close() {
-  //   open(location, '_self').close()
-  // }
 
-  // closeWindow.addEventListener('click', close)
 })
