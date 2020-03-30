@@ -1,6 +1,6 @@
 # Debugger 
 
-![](assets/lb1.gif = 20x20)
+<img src="assets/lb1.gif" width="25" height="25" /> life is short, debugging should be fun <img src="assets/lb1.gif" width="25" height="25" /> 
 A developer take on the classic Minesweeper game written in JavaScript, HTML and CSS
 
 Demo: https://mmxw.github.io/debugger/
