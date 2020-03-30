@@ -255,7 +255,7 @@ window.addEventListener('DOMContentLoaded', () => {
       })
     }
   }  
-
+  
   function generateRandomNums(min, max) {
     // generate random numbers that excludes the dummy grid indexes
 
@@ -272,6 +272,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     return randomNumbers
   }
+
+  
 
   function excludedItems(width) {
     // excludes the dummy grids, i.e., the outer invisible grids
