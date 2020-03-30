@@ -1,5 +1,6 @@
 # Debugger 
-![image of ladybug](assets/lb1.gif | width=20)life is short, debugging should be fun!"
+
+![](assets/lb1.gif = 20x20)
 A developer take on the classic Minesweeper game written in JavaScript, HTML and CSS
 
 Demo: https://mmxw.github.io/debugger/
