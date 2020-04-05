@@ -34,6 +34,36 @@ Download all the files and open `index.html` in a web browser
     - clear grids;
     - reset timer; 
 
+## What I learned from making the game
+
+* **Conceptually, and most importantly**, *game development is different from playing the game!* As a developer, you can set the rule and you can cheat when you test the game. But when I finished writing the game, I realised I just made a beast that I can't win. 
+* **Technically**, the following were the most *exciting* and *challenging* parts of the whole process for me:
+  - dummy grids. To set a boundary for autoclicking not go beyond the game board, I added an invisible row of grids on all sides of the board. So the game board for the easy level was in fact 11 x 11, not 10 x 10. These dummy grids are the stopping point for autoclicking. (later I learned that these are called [sentinel values](https://en.wikipedia.org/wiki/Sentinel_value))
+  - a non-deterministic bug related to the random number generator: 
+
+  I wanted to exclude the dummy grids and the first click from the random numbers was to set it such that the randomNumbers set does not include the dummies and the first click. However, the way I wrote my code was such that it is possible for the random number to be the index of the first click (given the nature of randomness). So `isFirstClick = randomNumbers.has(squares.indexOf(firstClick))` in the following code could be true, hence the condition `(!isDummy && !isFirstClick)` for the `if` statement is always false, so no more randomNum being added to the randomNumbers. There fore the condition of the `while` loop is always true, hence infinite loops until the page becomes unresponsive!
+
+  Because of the non-deterniministic nature of `randomNum`, it took me a while to figure it out, until I used  `console.log('bug indexes', randomNumbers, new Error().stack)`. 
+
+  But it was a wild win to catch such bug! (and a reflection of me writing bad code at the beginning of my learning as well. But hey, I learned! :)
+
+  ```js
+  function generateRandomNums(min, max) {
+      const randomNumbers = new Set()
+
+      while (randomNumbers.size < bugTotal) {
+        const randomNum = Math.floor(Math.random() * (max - min + 1)) + min
+        const isDummy = excludedItems(12).includes(randomNum)
+        <!-- const isFirstClick = (randomNumbers.has(squares.indexOf(firstClick))) --> DANGER!!!!
+        const isFirstClick = (randomNum === (squares.indexOf(firstClick)))      
+        if (!isDummy && !isFirstClick) randomNumbers.add(randomNum)     
+        //console.log('bug indexes', randomNumbers, new Error().stack)  
+      }
+      return randomNumbers
+    }
+   
+  ```
+  
 ## License
 
 
